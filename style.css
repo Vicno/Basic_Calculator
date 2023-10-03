@@ -44,3 +44,15 @@ input[type="text"] {
   text-align: right;
   letter-spacing: 1px;
 }
+@media only screen and (max-width: 414px) {
+  .calculator-grid {
+    grid-template-columns: repeat(4, 5.5rem);
+    grid-template-rows: minmax(5rem, auto) repeat(5, 5rem);
+  }
+}
+@media only screen and (max-width: 320px) {
+  .calculator-grid {
+    grid-template-columns: repeat(4, 4rem);
+    grid-template-rows: minmax(4rem, auto) repeat(5, 4rem);
+  }
+}
