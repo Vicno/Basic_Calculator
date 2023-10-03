@@ -94,13 +94,13 @@ const calculator = () => {
 
         if (inputTurn == 0 && firstValueInputed == false) {
             if (number1 == 0) {
-                number1 = +input;
+                number1 = +input + number1*10;
                 currentOperation = limitDecimals(number1);
                 inputTurn = 1;
                 inputScreen.value = currentOperation
             } else {
                 if (firstValueInputed == true) {
-                    number2 = +input;
+                    number2 = +input + number2*10;
                     number1 = operate(number1, number2, operand);
                     if (dividedByCero) {
                         inputScreen.value = 'You Shall Not pass!'
