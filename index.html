@@ -1,39 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculator</title>
-    <script src="calculator.js" defer> </script>
-
     <link rel="stylesheet" href="style.css" />
- 
+    <script src="calculator.js" defer> </script>
+  </head>
+  <body>
     <main>
       <section class="calculator-grid">
         <form class="output">
-          <input type="text" />
+          <input type="text" id="inputScreen"/>
         </form>
 
-        <button class="span-two">AC</button>
-        <button>DEL</button>
-        <button>+</button>
-        <button>1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>&times;</button>
-        <button>4</button>
-        <button>5</button>
-        <button>6</button>
-        <button>&divide;</button>
-        <button>7</button>
-        <button>8</button>
-        <button>9</button>
-        <button>-</button>
-        <button>.</button>
-        <button>0</button>
-        <button class="span-two">=</button>
+        <button class="span-two" id="acButton">AC</button>
+        <button id="delButton">DEL</button>
+        <button id="plussButton">+</button>
+        <button id="oneButton">1</button>
+        <button id="twoButton">2</button>
+        <button id="threeButton">3</button>
+        <button id="multiplyButton">&times;</button>
+        <button id="fourButton">4</button>
+        <button id="fiveButton">5</button>
+        <button id="sixButton">6</button>
+        <button id="divideButton">&divide;</button>
+        <button id="sevenButton">7</button>
+        <button id="eightButton">8</button>
+        <button id="nineButton">9</button>
+        <button id="minusButton">-</button>
+        <button id="dotButton">.</button>
+        <button id="ceroButton">0</button>
+        <button class="span-two" id="equalsButton">=</button>
       </section>
     </main>
-    
-</body>
+  </body>
 </html>

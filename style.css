@@ -1,24 +1,29 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 body {
   margin: 0;
-  background-image: linear-gradient (to right, #00aaff, #00ff6c);
+  background-image: linear-gradient(to right, #00aaff, #00ff6c);
 }
 .calculator-grid {
   display: grid;
-  margin-top: 2 rem;
+  margin-top: 2rem;
   justify-content: center;
-  grid-template-columns: repeat (4, 6 rem);
-  grid-template-rows: minmax (7 rem, auto) repeat (5, 6 rem);
+  grid-template-columns: repeat(4, 6rem);
+  grid-template-rows: minmax(7rem, auto) repeat(5, 6rem);
 }
 .calculator-grid > button {
   cursor: pointer;
-  font-size: 2 rem;
-  border: 2 px solid white;
+  font-size: 2rem;
+  border: 2px solid white;
   outline: none;
-  background-color: rgba (255, 255, 255, 0.75);
+  background-color: rgba(255, 255, 255, 0.75);
 }
 .calculator-grid > button:hover,
 .calculator-grid > button:focus {
-  background-color: rgba (255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.9);
 }
 .span-two {
   grid-column: span 2;
@@ -26,16 +31,16 @@ body {
 .output,
 input[type="text"] {
   grid-column: 1 / -1;
-  background-color: rgba (0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.75);
   display: flex;
   flex-direction: column;
   align-items: flex end;
   justify-content: space-around;
-  padding: 0.75 rem;
+  padding: 0.75rem;
   word-wrap: break-word;
   word-break: break-all;
   color: white;
-  font-size: 2 rem;
+  font-size: 2rem;
   text-align: right;
-  letter-spacing: 1 px;
+  letter-spacing: 1px;
 }
