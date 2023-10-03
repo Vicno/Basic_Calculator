@@ -1,23 +1,25 @@
 const calculator = () => {
-    const acButton = document.querySelector('#acButton')
-    const delButton = document.querySelector('#delButton')
-    const plussButton = document.querySelector('#plussButton')
-    const oneButton = document.querySelector('#oneButton')
-    const twoButton = document.querySelector('#twoButton')
-    const threeButton = document.querySelector('#threeButton')
-    const multiplyButton = document.querySelector('#multiplyButton')
-    const fourButton = document.querySelector('#fourButton')
-    const fiveButton = document.querySelector('#fiveButton')
-    const sixButton = document.querySelector('#sixButton')
-    const divideButton = document.querySelector('#divideButton')
-    const sevenButton = document.querySelector('#sevenButton')
-    const eightButton = document.querySelector('#eightButton')
-    const nineButton = document.querySelector('#nineButto')
-    const minusButton = document.querySelector('#minusButton')
-    const dotButton = document.querySelector('#dotButton')
-    const ceroButton = document.querySelector('#ceroButton')
-    const equalsButton = document.querySelector('#equalsButton')
-    const inputScreen = document.querySelector('#inputScreen')
+    const acButton = document.querySelector('#acButton');
+    const delButton = document.querySelector('#delButton');
+    const plussButton = document.querySelector('#plussButton');
+    const oneButton = document.querySelector('#oneButton');
+    const twoButton = document.querySelector('#twoButton');
+    const threeButton = document.querySelector('#threeButton');
+    const multiplyButton = document.querySelector('#multiplyButton');
+    const fourButton = document.querySelector('#fourButton');
+    const fiveButton = document.querySelector('#fiveButton');
+    const sixButton = document.querySelector('#sixButton');
+    const divideButton = document.querySelector('#divideButton');
+    const sevenButton = document.querySelector('#sevenButton');
+    const eightButton = document.querySelector('#eightButton');
+    const nineButton = document.querySelector('#nineButton');
+    const minusButton = document.querySelector('#minusButton');
+    const dotButton = document.querySelector('#dotButton');
+    const ceroButton = document.querySelector('#ceroButton');
+    const equalsButton = document.querySelector('#equalsButton');
+    const inputScreen = document.querySelector('#inputScreen');
+
+    inputScreen.value = '0';
 
     let inputTurn = 0;
     let number1 = 0;
@@ -28,7 +30,6 @@ const calculator = () => {
     let totalOperationMessage = '';
     let dividedByCero = false;
 
-
     const reset = () => {
         inputTurn = 0;
         number1 = 0;
@@ -38,7 +39,7 @@ const calculator = () => {
         currentOperation = 0;
         totalOperationMessage = '';
         dividedByCero = false;
-        inputScreen.value = '';
+        inputScreen.value = '0';
         firstValueInputed = false;
     }
     const add = (number1, number2) => {
@@ -67,10 +68,11 @@ const calculator = () => {
                 result = multiply(numer1, number2);
                 break;
             case '/':
-                if (number2 !== 0) {
-                    result = divide(numer1, number2);
-                } else {
+                if (number2 == 0) {
+                    result = 'You Shall Not Pass!';
                     dividedByCero = true;
+                } else {
+                    result = divide(number1, number2);
                 }
                 break;
             case '-':
@@ -82,121 +84,130 @@ const calculator = () => {
 
     const limitDecimals = (number) => {
         if (number % 1 !== 0) {
-            number = number.toFixed(4)
+            number = number.toFixed(4);
         }
         return number;
     }
 
-
     const run = (input) => {
-        inputTurn = !isNaN(input) ? 0 : 1
-        let firstValueInputed = false
-
-        if (inputTurn == 0 && firstValueInputed == false) {
-            if (number1 == 0) {
-                number1 = +input + number1*10;
-                currentOperation = limitDecimals(number1);
-                inputTurn = 1;
-                inputScreen.value = currentOperation
-            } else {
-                if (firstValueInputed == true) {
-                    number2 = +input + number2*10;
-                    number1 = operate(number1, number2, operand);
-                    if (dividedByCero) {
-                        inputScreen.value = 'You Shall Not pass!'
-                        reset()
-                    } else {
-                        totalOperationMessage = 'Total: ';
-                        currentOperation = limitDecimals(number1);
-                        inputTurn = 1;
-                        inputScreen.value = currentOperation
-                    }
+        if (input === '=') {
+            if (operand && inputTurn === 1) {
+                number2 = parseFloat(inputScreen.value);
+                result = operate(number1, number2, operand);
+    
+                if (operand === '/' && number2 === 0) {
+                    inputScreen.value = 'You Shall Not Pass!';
+                    return;
                 }
-            }
-        }
-        else {
-            operand = input.trim();
-            if (operand == '=') {
-                inputScreen.value = `${currentOperation}`
-                reset()
-            }
-            else {
+    
+                inputScreen.value = limitDecimals(result);
+                number1 = result;
+                operand = '';
                 inputTurn = 0;
-                firstValueInputed = true
+            }
+        } else if ('+-*/'.includes(input)) {
+            if (operand && inputTurn === 1) {
+                number2 = parseFloat(inputScreen.value);
+    
+                if (operand === '/' && number2 === 0) {
+                    inputScreen.value = 'You Shall Not Pass!';
+                    return;
+                }
+                result = operate(number1, number2, operand);
+                inputScreen.value = limitDecimals(result);
+                number1 = result;
+                operand = input;
+                inputTurn = 0;
+            } else {
+                operand = input;
+                number1 = parseFloat(inputScreen.value);
+                inputTurn = 0;
+            }
+        } else if (!isNaN(input) || (input === '.' && !inputScreen.value.includes('.'))) { 
+            if (inputTurn === 0) {
+                if (input !== '.') {
+                    inputScreen.value = input;
+                } else {
+                    inputScreen.value = '0.'
+                }
+                inputTurn = 1;
+            } else {
+                inputScreen.value += input;
             }
         }
-    }
+    };
 
     acButton.addEventListener('click', () => {
-        reset()
+        reset();
     })
 
     delButton.addEventListener('click', () => {
-        run('-')
+        run('-');
     })
 
     plussButton.addEventListener('click', () => {
-        run('+')
+        run('+');
     })
 
     oneButton.addEventListener('click', () => {
-        run('1')
+        run('1');
     })
 
     twoButton.addEventListener('click', () => {
-        run('2')
+        run('2');
     })
 
     threeButton.addEventListener('click', () => {
-        run('3')
+        run('3');
     })
 
     multiplyButton.addEventListener('click', () => {
-        run('*')
+        run('*');
     })
 
     fourButton.addEventListener('click', () => {
-        run('4')
+        run('4');
     })
 
     fiveButton.addEventListener('click', () => {
-        run('5')
+        run('5');
     })
 
     sixButton.addEventListener('click', () => {
-        run('6')
+        run('6');
     })
 
     divideButton.addEventListener('click', () => {
-        run('/')
+        run('/');
     })
 
     sevenButton.addEventListener('click', () => {
-        run('7')
+        run('7');
     })
 
     eightButton.addEventListener('click', () => {
-        run('8')
+        run('8');
     })
 
     nineButton.addEventListener('click', () => {
-        run('9')
+        run('9');
     })
 
     minusButton.addEventListener('click', () => {
-        run('-')
+        run('-');
     })
 
     dotButton.addEventListener('click', () => {
-        run('.')
+        run('.');
     })
 
     ceroButton.addEventListener('click', () => {
-        run('0')
+        run('0');
     })
 
     equalsButton.addEventListener('click', () => {
-        run('=')
-    })
-
+        run('=');
+    });
 }
+
+document.addEventListener('DOMContentLoaded', calculator);
