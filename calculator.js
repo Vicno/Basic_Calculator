@@ -84,7 +84,7 @@ const calculator = () => {
 
     const limitDecimals = (number) => {
         if (number % 1 !== 0) {
-            number = number.toFixed(4);
+            number = parseFloat(number.toFixed(4)).toString();
         }
         return number;
     }
@@ -131,6 +131,8 @@ const calculator = () => {
                     inputScreen.value = '0.'
                 }
                 inputTurn = 1;
+            } else if (inputTurn === 1 && inputScreen.value === '0' && input !== '.') {
+                inputScreen.value = input;
             } else {
                 inputScreen.value += input;
             }
@@ -142,7 +144,14 @@ const calculator = () => {
     })
 
     delButton.addEventListener('click', () => {
-        run('-');
+        if (inputTurn === 1) {
+            inputScreen.value = '0';
+            inputTurn = 0;
+        } else if (inputTurn === 0 && inputScreen.value.length > 1) {
+            inputScreen.value = inputScreen.value.slice(0, -1);
+        } else if (inputTurn === 0) {
+            inputScreen.value = '0';
+        }
     })
 
     plussButton.addEventListener('click', () => {
@@ -207,6 +216,50 @@ const calculator = () => {
 
     equalsButton.addEventListener('click', () => {
         run('=');
+    });
+
+    let keyPressInProgress = false;
+
+    // Add a keydown event listener to the document
+    document.addEventListener('keydown', (event) => {
+        const key = event.key;
+
+        // Check if a key press is already in progress
+        if (keyPressInProgress) {
+            return;
+        }
+
+        // Define a mapping of keys to calculator actions
+        const keyActions = {
+            '0': 'ceroButton',
+            '1': 'oneButton',
+            '2': 'twoButton',
+            '3': 'threeButton',
+            '4': 'fourButton',
+            '5': 'fiveButton',
+            '6': 'sixButton',
+            '7': 'sevenButton',
+            '8': 'eightButton',
+            '9': 'nineButton',
+            '+': 'plussButton',
+            '-': 'minusButton',
+            '*': 'multiplyButton',
+            '/': 'divideButton',
+            '.': 'dotButton',
+            'Enter': 'equalsButton', 
+            'Escape': 'acButton',   
+            'Delete': 'delButton'  
+        };
+
+        if (keyActions.hasOwnProperty(key)) {
+            const buttonId = keyActions[key];
+            const buttonElement = document.querySelector(`#${buttonId}`);
+            if (buttonElement) {
+                keyPressInProgress = true; 
+                buttonElement.click();
+                keyPressInProgress = false; 
+            }
+        }
     });
 }
 
