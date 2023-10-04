@@ -25,6 +25,10 @@ body {
 .calculator-grid > button:focus {
   background-color: rgba(255, 255, 255, 0.9);
 }
+.calculator-grid > button:active {
+  box-shadow: 0 2px #666;
+  transform: translateY(3px);
+}
 .span-two {
   grid-column: span 2;
 }
@@ -54,5 +58,8 @@ input[type="text"] {
   .calculator-grid {
     grid-template-columns: repeat(4, 4rem);
     grid-template-rows: minmax(4rem, auto) repeat(5, 4rem);
+  }
+  .calculator-grid > button {
+    font-size: 1.5rem;
   }
 }
