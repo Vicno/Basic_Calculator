@@ -290,3 +290,4 @@ const calculator = () => {
 }
 
 document.addEventListener('DOMContentLoaded', calculator);
+
