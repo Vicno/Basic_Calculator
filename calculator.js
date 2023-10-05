@@ -68,8 +68,8 @@ const calculator = () => {
                 result = multiply(numer1, number2);
                 break;
             case '/':
-                if (number2 == 0) {
-                    result = 'You Shall Not Pass!';
+                if (number2 === 0) {
+                    result = 'ERROR';
                     dividedByCero = true;
                 } else {
                     result = divide(number1, number2);
@@ -88,47 +88,61 @@ const calculator = () => {
         }
         return number;
     }
-
+    
     const run = (input) => {
+
+        if (dividedByCero) {
+            if (!isNaN(input) || input === '.') {
+                inputScreen.value = input;
+                dividedByCero = false;
+                number1 = parseFloat(inputScreen.value);
+                operand = '';
+                inputTurn = 0;
+            }
+            return;
+        }
+    
         if (input === '=') {
             if (operand && inputTurn === 1) {
                 number2 = parseFloat(inputScreen.value);
                 result = operate(number1, number2, operand);
     
                 if (operand === '/' && number2 === 0) {
-                    inputScreen.value = 'You Shall Not Pass!';
-                    return;
+                    inputScreen.value = 'ERROR';
+                    dividedByCero = true;
+                } else {
+                    inputScreen.value = limitDecimals(result);
+                    number1 = result;
+                    operand = '';
+                    inputTurn = 0;
                 }
-    
-                inputScreen.value = limitDecimals(result);
-                number1 = result;
-                operand = '';
-                inputTurn = 0;
             }
         } else if ('+-*/'.includes(input)) {
             if (operand && inputTurn === 1) {
                 number2 = parseFloat(inputScreen.value);
     
                 if (operand === '/' && number2 === 0) {
-                    inputScreen.value = 'You Shall Not Pass!';
-                    return;
+                    inputScreen.value = 'ERROR';
+                    dividedByCero = true;
+                } else {
+                    result = operate(number1, number2, operand);
+                    inputScreen.value = limitDecimals(result);
+                    number1 = result;
+                    operand = input;
+                    inputTurn = 0;
                 }
-                result = operate(number1, number2, operand);
-                inputScreen.value = limitDecimals(result);
-                number1 = result;
-                operand = input;
-                inputTurn = 0;
             } else {
                 operand = input;
                 number1 = parseFloat(inputScreen.value);
                 inputTurn = 0;
+
             }
-        } else if (!isNaN(input) || (input === '.' && !inputScreen.value.includes('.'))) { 
+        } else if (!isNaN(input) || (input === '.' && !inputScreen.value.includes('.'))) {
             if (inputTurn === 0) {
                 if (input !== '.') {
                     inputScreen.value = input;
                 } else {
-                    inputScreen.value = '0.'
+                    inputScreen.value = '0.';
                 }
                 inputTurn = 1;
             } else if (inputTurn === 1 && inputScreen.value === '0' && input !== '.') {
@@ -137,8 +151,13 @@ const calculator = () => {
                 inputScreen.value += input;
             }
         }
+        
+        console.log(`${inputScreen.value}`);
+        console.log(`${number1} N1`);
+        console.log(`${number2} N2`);
+        console.log(`${operand} operand`);
     };
-
+    
     acButton.addEventListener('click', () => {
         reset();
     })
@@ -146,9 +165,15 @@ const calculator = () => {
     delButton.addEventListener('click', () => {
         if (inputTurn === 1) {
             inputScreen.value = '0';
+            operand = '';
             inputTurn = 0;
         } else if (inputTurn === 0 && inputScreen.value.length > 1) {
             inputScreen.value = inputScreen.value.slice(0, -1);
+            if (number2 === 0) {
+                number1 = inputScreen.value;
+            } else {
+                number2 = inputScreen.value;
+            }
         } else if (inputTurn === 0) {
             inputScreen.value = '0';
         }
@@ -246,18 +271,19 @@ const calculator = () => {
             '*': 'multiplyButton',
             '/': 'divideButton',
             '.': 'dotButton',
-            'Enter': 'equalsButton', 
-            'Escape': 'acButton',   
-            'Delete': 'delButton'  
+            'Enter': 'equalsButton',
+            'Escape': 'acButton',
+            'Delete': 'delButton'
         };
 
         if (keyActions.hasOwnProperty(key)) {
             const buttonId = keyActions[key];
             const buttonElement = document.querySelector(`#${buttonId}`);
             if (buttonElement) {
-                keyPressInProgress = true; 
+                keyPressInProgress = true;
                 buttonElement.click();
-                keyPressInProgress = false; 
+                keyPressInProgress = false;
+                console.log(buttonId)
             }
         }
     });
