@@ -29,6 +29,7 @@ const calculator = () => {
     let currentOperation = 0;
     let totalOperationMessage = '';
     let dividedByCero = false;
+    
 
     const reset = () => {
         inputTurn = 0;
@@ -91,16 +92,23 @@ const calculator = () => {
     
     const run = (input) => {
 
+        const currentInputSize = inputScreen.value.length;
+        const maxInputSize = calculateMaxInputSize();
+
+        if (currentInputSize >= maxInputSize) {
+            return; 
+        }
+
         if (dividedByCero) {
             if (!isNaN(input) || input === '.') {
+                reset();
                 inputScreen.value = input;
                 dividedByCero = false;
                 number1 = parseFloat(inputScreen.value);
-                operand = '';
-                inputTurn = 0;
+                return;
             }
             return;
-        }
+        } 
     
         if (input === '=') {
             if (operand && inputTurn === 1) {
@@ -116,11 +124,21 @@ const calculator = () => {
                     operand = '';
                     inputTurn = 0;
                 }
+            } else {
+                if ((operand === '' && input !== '-')) {
+                    operand = input;
+                    inputScreen.value = 'ERROR'; 
+                    number1 = parseFloat(inputScreen.value);
+                    inputTurn = 0;
+                } else {
+                    inputScreen.value = 'ERROR';
+                    dividedByCero = true;
+                }
             }
         } else if ('+-*/'.includes(input)) {
             if (operand && inputTurn === 1) {
                 number2 = parseFloat(inputScreen.value);
-    
+
                 if (operand === '/' && number2 === 0) {
                     inputScreen.value = 'ERROR';
                     dividedByCero = true;
@@ -151,12 +169,13 @@ const calculator = () => {
                 inputScreen.value += input;
             }
         }
-        
+
         console.log(`${inputScreen.value}`);
         console.log(`${number1} N1`);
         console.log(`${number2} N2`);
         console.log(`${operand} operand`);
     };
+
     
     acButton.addEventListener('click', () => {
         reset();
@@ -291,3 +310,37 @@ const calculator = () => {
 
 document.addEventListener('DOMContentLoaded', calculator);
 
+function calculateMaxInputSize() {
+    const screenWidth = window.innerWidth; 
+    let maxInputSize;
+
+    if (screenWidth < 425) {
+        maxInputSize = 9; 
+    } else {
+        maxInputSize = 17; 
+    }
+
+    return maxInputSize;
+}
+
+function formatNumber(number, maxInputSize) {
+    if (number === null || number === undefined) {
+        return '';
+    }
+    
+    if (number.toString().replace(/[^0-9]/g, '').length > maxInputSize) {
+        return number.toExponential(maxInputSize - 5); 
+    }
+    
+    return number.toString();
+}
+
+window.addEventListener('resize', () => {
+    maxInputSize = calculateMaxInputSize();
+    const currentValue = parseFloat(inputScreen.value);
+    
+    inputScreen.value = formatNumber(currentValue, maxInputSize);
+});
+
+let maxInputSize = calculateMaxInputSize();
+originalInputValue = inputScreen.value;
