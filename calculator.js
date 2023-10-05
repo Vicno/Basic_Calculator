@@ -94,12 +94,13 @@ const calculator = () => {
             if (operand && inputTurn === 1) {
                 number2 = parseFloat(inputScreen.value);
                 result = operate(number1, number2, operand);
-    
+
                 if (operand === '/' && number2 === 0) {
                     inputScreen.value = 'You Shall Not Pass!';
+                    reset();
                     return;
                 }
-    
+
                 inputScreen.value = limitDecimals(result);
                 number1 = result;
                 operand = '';
@@ -108,9 +109,10 @@ const calculator = () => {
         } else if ('+-*/'.includes(input)) {
             if (operand && inputTurn === 1) {
                 number2 = parseFloat(inputScreen.value);
-    
+
                 if (operand === '/' && number2 === 0) {
                     inputScreen.value = 'You Shall Not Pass!';
+                    reset();
                     return;
                 }
                 result = operate(number1, number2, operand);
@@ -123,7 +125,7 @@ const calculator = () => {
                 number1 = parseFloat(inputScreen.value);
                 inputTurn = 0;
             }
-        } else if (!isNaN(input) || (input === '.' && !inputScreen.value.includes('.'))) { 
+        } else if (!isNaN(input) || (input === '.' && !inputScreen.value.includes('.'))) {
             if (inputTurn === 0) {
                 if (input !== '.') {
                     inputScreen.value = input;
@@ -137,6 +139,10 @@ const calculator = () => {
                 inputScreen.value += input;
             }
         }
+        console.log(`${inputScreen.value}`)
+        console.log(`${number1} N1`)
+        console.log(`${number2} N2`)
+        console.log(`${operand} operand`)
     };
 
     acButton.addEventListener('click', () => {
@@ -146,9 +152,15 @@ const calculator = () => {
     delButton.addEventListener('click', () => {
         if (inputTurn === 1) {
             inputScreen.value = '0';
+            operand = '';
             inputTurn = 0;
         } else if (inputTurn === 0 && inputScreen.value.length > 1) {
             inputScreen.value = inputScreen.value.slice(0, -1);
+            if (number2 === 0) {
+                number1 = inputScreen.value;
+            } else {
+                number2 = inputScreen.value;
+            }
         } else if (inputTurn === 0) {
             inputScreen.value = '0';
         }
@@ -246,18 +258,19 @@ const calculator = () => {
             '*': 'multiplyButton',
             '/': 'divideButton',
             '.': 'dotButton',
-            'Enter': 'equalsButton', 
-            'Escape': 'acButton',   
-            'Delete': 'delButton'  
+            'Enter': 'equalsButton',
+            'Escape': 'acButton',
+            'Delete': 'delButton'
         };
 
         if (keyActions.hasOwnProperty(key)) {
             const buttonId = keyActions[key];
             const buttonElement = document.querySelector(`#${buttonId}`);
             if (buttonElement) {
-                keyPressInProgress = true; 
+                keyPressInProgress = true;
                 buttonElement.click();
-                keyPressInProgress = false; 
+                keyPressInProgress = false;
+                console.log(buttonId)
             }
         }
     });
