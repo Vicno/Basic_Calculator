@@ -29,7 +29,7 @@ const calculator = () => {
     let currentOperation = 0;
     let totalOperationMessage = '';
     let dividedByCero = false;
-    
+
 
     const reset = () => {
         inputTurn = 0;
@@ -70,7 +70,7 @@ const calculator = () => {
                 break;
             case '/':
                 if (number2 === 0) {
-                    result = 'ERROR';
+                    result = 'NotGonnaHappen';
                     dividedByCero = true;
                 } else {
                     result = divide(number1, number2);
@@ -89,14 +89,14 @@ const calculator = () => {
         }
         return number;
     }
-    
+
     const run = (input) => {
 
         const currentInputSize = inputScreen.value.length;
         const maxInputSize = calculateMaxInputSize();
 
         if (currentInputSize >= maxInputSize) {
-            return; 
+            return;
         }
 
         if (dividedByCero) {
@@ -108,30 +108,39 @@ const calculator = () => {
                 return;
             }
             return;
-        } 
-    
+        }
+
         if (input === '=') {
             if (operand && inputTurn === 1) {
                 number2 = parseFloat(inputScreen.value);
-                result = operate(number1, number2, operand);
-    
+                if (!isNaN(number1)) {
+                    result = operate(number1, number2, operand);
+                } else {
+                    inputScreen.value = 'QuitTrying';
+                    dividedByCero = true;
+                }
+
+
                 if (operand === '/' && number2 === 0) {
-                    inputScreen.value = 'ERROR';
+                    inputScreen.value = 'NotGonnaHappen';
                     dividedByCero = true;
                 } else {
-                    inputScreen.value = limitDecimals(result);
-                    number1 = result;
-                    operand = '';
-                    inputTurn = 0;
+                    if (!isNaN(number1)) {
+                        inputScreen.value = limitDecimals(result);
+                        number1 = result;
+                        operand = '';
+                        inputTurn = 0;
+                    }
+
                 }
             } else {
                 if ((operand === '' && input !== '-')) {
                     operand = input;
-                    inputScreen.value = 'ERROR'; 
+                    inputScreen.value = 'NotGonnaHappen';
                     number1 = parseFloat(inputScreen.value);
                     inputTurn = 0;
                 } else {
-                    inputScreen.value = 'ERROR';
+                    inputScreen.value = 'NotGonnaHappen';
                     dividedByCero = true;
                 }
             }
@@ -140,7 +149,7 @@ const calculator = () => {
                 number2 = parseFloat(inputScreen.value);
 
                 if (operand === '/' && number2 === 0) {
-                    inputScreen.value = 'ERROR';
+                    inputScreen.value = 'NotGonnaHappen';
                     dividedByCero = true;
                 } else {
                     result = operate(number1, number2, operand);
@@ -176,7 +185,7 @@ const calculator = () => {
         console.log(`${operand} operand`);
     };
 
-    
+
     acButton.addEventListener('click', () => {
         reset();
     })
@@ -311,13 +320,13 @@ const calculator = () => {
 document.addEventListener('DOMContentLoaded', calculator);
 
 function calculateMaxInputSize() {
-    const screenWidth = window.innerWidth; 
+    const screenWidth = window.innerWidth;
     let maxInputSize;
 
     if (screenWidth < 425) {
-        maxInputSize = 9; 
+        maxInputSize = 9;
     } else {
-        maxInputSize = 17; 
+        maxInputSize = 17;
     }
 
     return maxInputSize;
@@ -327,18 +336,18 @@ function formatNumber(number, maxInputSize) {
     if (number === null || number === undefined) {
         return '';
     }
-    
+
     if (number.toString().replace(/[^0-9]/g, '').length > maxInputSize) {
-        return number.toExponential(maxInputSize - 5); 
+        return number.toExponential(maxInputSize - 5);
     }
-    
+
     return number.toString();
 }
 
 window.addEventListener('resize', () => {
     maxInputSize = calculateMaxInputSize();
     const currentValue = parseFloat(inputScreen.value);
-    
+
     inputScreen.value = formatNumber(currentValue, maxInputSize);
 });
 
