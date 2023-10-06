@@ -346,10 +346,18 @@ function formatNumber(number, maxInputSize) {
 
 window.addEventListener('resize', () => {
     maxInputSize = calculateMaxInputSize();
-    const currentValue = parseFloat(inputScreen.value);
+    let currentValue = parseFloat(inputScreen.value);
+    if(originalSize > maxInputSize){
+        originalInputValue = currentValue
+    }
+    else {
+        currentValue = originalInputValue
+    }
 
+    
     inputScreen.value = formatNumber(currentValue, maxInputSize);
 });
 
 let maxInputSize = calculateMaxInputSize();
-originalInputValue = inputScreen.value;
+let originalSize = maxInputSize;
+let originalInputValue = inputScreen.value;
