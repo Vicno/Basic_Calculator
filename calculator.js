@@ -29,6 +29,7 @@ const calculator = () => {
     let currentOperation = 0;
     let totalOperationMessage = '';
     let dividedByCero = false;
+    let equalCheck = 0;
     
     const reset = () => {
         inputTurn = 0;
@@ -41,6 +42,8 @@ const calculator = () => {
         dividedByCero = false;
         inputScreen.value = '0';
         firstValueInputed = false;
+        equalCheck = 0;
+        delPressed = 0;
     }
     const add = (number1, number2) => {
         return number1 + number2;
@@ -69,7 +72,7 @@ const calculator = () => {
                 break;
             case '/':
                 if (number2 === 0) {
-                    result = 'NotGonnaHappen';
+                    result = 'USrewedUP';
                     dividedByCero = true;
                 } else {
                     result = divide(number1, number2);
@@ -111,6 +114,7 @@ const calculator = () => {
         }
 
         if (input === '=') {
+            equalCheck += 1;
             if (operand && inputTurn === 1) {
                 number2 = parseFloat(inputScreen.value);
                 if (!isNaN(number1)) {
@@ -130,7 +134,6 @@ const calculator = () => {
                     if (!isNaN(number1)) {
                         inputScreen.value = limitDecimals(result);
                         number1 = result;
-                        operand = '';
                         inputTurn = 0;
                     }
 
@@ -195,22 +198,19 @@ const calculator = () => {
         reset();
     })
 
+    let newNumber;
+    let delPressed = 0;
     delButton.addEventListener('click', () => {
-        if (inputTurn === 1) {
-            inputScreen.value = '0';
-            operand = '';
-            inputTurn = 0;
-        } else if (inputTurn === 0 && inputScreen.value.length > 1) {
-            inputScreen.value = inputScreen.value.slice(0, -1);
-            if (number2 === 0) {
-                number1 = inputScreen.value;
-            } else {
-                number2 = inputScreen.value;
-            }
-        } else if (inputTurn === 0) {
-            inputScreen.value = '0';
-        }
-    })
+        delPressed += 1; 
+        inputScreen.value = '0';
+        if (equalCheck > 0 && delPressed === 1) {
+            newNumber = number2;
+            number1 = newNumber;
+        } else if (equalCheck > 0) {
+            number1 = newNumber;
+        } 
+    });
+    
 
     plussButton.addEventListener('click', () => {
         run('+');
@@ -324,17 +324,17 @@ const calculator = () => {
 
 document.addEventListener('DOMContentLoaded', calculator);
 
+let originalInputValue = ''; 
+
 function calculateMaxInputSize() {
-    const screenWidth = window.innerWidth;
+    const screenWidth = window.innerWidth; 
     let maxInputSize;
 
     if (screenWidth < 425) {
-        maxInputSize = 11;
+        maxInputSize = 11; 
     } else {
-        maxInputSize = 17;
+        maxInputSize = 17; 
     }
-
-    inputScreen = '0';
 
     return maxInputSize;
 }
@@ -344,8 +344,12 @@ function formatNumber(number, maxInputSize) {
         return '';
     }
 
+    if (number === 0) {
+        return '0'; 
+    }
+
     if (number.toString().replace(/[^0-9]/g, '').length > maxInputSize) {
-        return number.toExponential(maxInputSize - 5);
+        return number.toExponential(maxInputSize - 5); 
     }
 
     return number.toString();
@@ -353,18 +357,11 @@ function formatNumber(number, maxInputSize) {
 
 window.addEventListener('resize', () => {
     maxInputSize = calculateMaxInputSize();
-    let currentValue = parseFloat(inputScreen.value);
-    if(originalSize > maxInputSize){
-        originalInputValue = currentValue
-    }
-    else {
-        currentValue = originalInputValue
-    }
+    const currentValue = parseFloat(inputScreen.value);
 
-    
-    inputScreen.value = formatNumber(currentValue, maxInputSize);
+    inputScreen.value = originalInputValue ? originalInputValue : formatNumber(currentValue, maxInputSize);
 });
 
 let maxInputSize = calculateMaxInputSize();
-let originalSize = maxInputSize;
-let originalInputValue = inputScreen.value;
+
+originalInputValue = inputScreen.value;
