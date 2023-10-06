@@ -29,8 +29,7 @@ const calculator = () => {
     let currentOperation = 0;
     let totalOperationMessage = '';
     let dividedByCero = false;
-
-
+    
     const reset = () => {
         inputTurn = 0;
         number1 = 0;
@@ -105,6 +104,7 @@ const calculator = () => {
                 inputScreen.value = input;
                 dividedByCero = false;
                 number1 = parseFloat(inputScreen.value);
+                inputTurn = 1;
                 return;
             }
             return;
@@ -122,8 +122,10 @@ const calculator = () => {
 
 
                 if (operand === '/' && number2 === 0) {
-                    inputScreen.value = 'NotGonnaHappen';
+                    reset();
+                    inputScreen.value = 'USrewedUP';
                     dividedByCero = true;
+                    return;
                 } else {
                     if (!isNaN(number1)) {
                         inputScreen.value = limitDecimals(result);
@@ -136,11 +138,13 @@ const calculator = () => {
             } else {
                 if ((operand === '' && input !== '-')) {
                     operand = input;
-                    inputScreen.value = 'NotGonnaHappen';
+                    reset();
+                    inputScreen.value = 'USrewedUP';
                     number1 = parseFloat(inputScreen.value);
                     inputTurn = 0;
                 } else {
-                    inputScreen.value = 'NotGonnaHappen';
+                    reset();
+                    inputScreen.value = 'USrewedUP';
                     dividedByCero = true;
                 }
             }
@@ -149,7 +153,8 @@ const calculator = () => {
                 number2 = parseFloat(inputScreen.value);
 
                 if (operand === '/' && number2 === 0) {
-                    inputScreen.value = 'NotGonnaHappen';
+                    reset();
+                    inputScreen.value = 'USrewedUP';
                     dividedByCero = true;
                 } else {
                     result = operate(number1, number2, operand);
@@ -324,10 +329,12 @@ function calculateMaxInputSize() {
     let maxInputSize;
 
     if (screenWidth < 425) {
-        maxInputSize = 9;
+        maxInputSize = 11;
     } else {
         maxInputSize = 17;
     }
+
+    inputScreen = '0';
 
     return maxInputSize;
 }
