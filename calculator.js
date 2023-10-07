@@ -101,8 +101,10 @@ const calculator = () => {
         const currentInputSize = inputScreen.value.length;
         const maxInputSize = calculateMaxInputSize();
 
-        if (currentInputSize >= maxInputSize) {
-            return;
+        if (currentInputSize >= maxInputSize && operand === '') {
+            if (!'+-*/='.includes(input)) {
+                return;
+            }
         }
 
         if (dividedByCero) {
