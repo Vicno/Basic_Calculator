@@ -377,17 +377,12 @@ function formatNumber(number, maxInputSize) {
     return number.toString();
 }
 let maxInputSize = calculateMaxInputSize();
-let originalSize = maxInputSize;
 originalInputValue = inputScreen.value;
 window.addEventListener('resize', () => {
     maxInputSize = calculateMaxInputSize();
     let currentValue = parseFloat(inputScreen.value);
-    if( originalSize > maxInputSize){
-        originalInputValue = currentValue
-    } else {
-        currentValue = originalInputValue
-    }
-    inputScreen.value =  formatNumber(currentValue, maxInputSize);
+    
+    inputScreen.value =  originalInputValue ? originalInputValue :formatNumber(currentValue, maxInputSize);
 });
 
 
